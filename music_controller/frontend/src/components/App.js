@@ -1,5 +1,8 @@
 import React, { Component } from "react";
-import { render } from "react-dom";
+import {createRoot} from 'react-dom/client';
+import Homepage from "./HomePage"
+import RoomJoinPage from "./RoomJoinPage";
+import CreeateRoomPage from "./CreateRoomPage";
 
 
 export default class App extends Component {
@@ -8,9 +11,12 @@ export default class App extends Component {
     }
 
     render() {
-        return <h1>Testing React Code</h1>
+        return <div>
+            <Homepage />\
+            </div>
     }
 }
 
-const appDiv = document.getElementByID("app");
-render(<App />, appDiv)
+const appDiv = document.getElementById("app");
+const root = createRoot(appDiv)
+root.render(<App name="Ryan"/>)
