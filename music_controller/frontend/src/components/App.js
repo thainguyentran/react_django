@@ -19,4 +19,4 @@ export default class App extends Component {
 
 const appDiv = document.getElementById("app");
 const root = createRoot(appDiv)
-root.render(<App name="Ryan"/>)
+root.render(<App/>)
