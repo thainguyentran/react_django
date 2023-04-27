@@ -9,8 +9,13 @@ import { Link } from "react-router-dom";
 import { Radio } from "@mui/material";
 import { RadioGroup } from '@mui/material';
 import { FormControlLabel } from "@mui/material";
+import { useNavigate } from 'react-router-dom';
 
-export default class CreateRoomPage extends Component {
+export const withRouter = (Component) => (props) => {
+  const { navigation } = useNavigate();
+  return <Component navigation={navigation} {...props} />;
+};
+class CreateRoomPage extends Component {
   defaultVotes = 2;
 
   constructor(props) {
@@ -19,7 +24,6 @@ export default class CreateRoomPage extends Component {
       guest_can_pause: true,
       votes_to_skip: this.defaultVotes,
     };
-
     this.handleRoomButtonPressed = this.handleRoomButtonPressed.bind(this);
     this.handleVotesChange = this.handleVotesChange.bind(this);
     this.handleGuestCanPauseChange = this.handleGuestCanPauseChange.bind(this);
@@ -48,7 +52,7 @@ export default class CreateRoomPage extends Component {
     };
     fetch('/api/create-room', requestOptions)
       .then((response) => response.json())
-      .then((data) => console.log(data));
+      .then((data) => navigation.navigate('/room/' + data.code));
   }
 
     render() {
@@ -119,3 +123,5 @@ export default class CreateRoomPage extends Component {
         );
       }
     }
+
+    export default withRouter(CreateRoomPage);
