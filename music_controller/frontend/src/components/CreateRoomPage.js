@@ -47,8 +47,8 @@ class CreateRoomPage extends Component {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        votesToSkip: this.state.votesToSkip,
-        guestCanPause: this.state.guestCanPause,
+        votes_to_skip: this.state.votesToSkip,
+        guest_can_pause: this.state.guestCanPause,
       }),
     };
     fetch('/api/create-room', requestOptions)
@@ -61,14 +61,13 @@ class CreateRoomPage extends Component {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        votesToSkip: this.state.votesToSkip,
-        guestCanPause: this.state.guestCanPause,
+        votes_to_skip: this.state.votesToSkip,
+        guest_can_pause: this.state.guestCanPause,
         code: this.props.roomCode,
       }),
     };
     fetch('/api/update-room', requestOptions)
       .then((response) => {
-        console.log(response);
         if (response.ok) {
           this.setState({
             successMsg : "Room updated successfully!"
@@ -102,7 +101,6 @@ class CreateRoomPage extends Component {
         </Grid>
     );
   }
-
   renderUpdateButtons() {
     return (
       <Grid item xs={12} align="center">
@@ -116,6 +114,7 @@ class CreateRoomPage extends Component {
       </Grid>
     );
   }
+  
   render() {
     const title = this.props.update ? "Update Room" : "Create a Room";
     return (
@@ -153,6 +152,7 @@ class CreateRoomPage extends Component {
             <FormHelperText component="div">
               <div align="center">Guest Control of Playback State</div>
             </FormHelperText>
+            
             <RadioGroup
               row
               defaultValue={this.props.guestCanPause.toString()}
