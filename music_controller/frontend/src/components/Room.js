@@ -24,13 +24,15 @@ class Room extends Component {
     this.updateshowSettings = this.updateShowSettings.bind(this);
     this.renderSettingsButton = this.renderSettingsButton.bind(this);
     this.renderSettings = this.renderSettings.bind(this);
+    this.getRoomDetails = this.getRoomDetails.bind(this);
+    this.getRoomDetails();
   }
 
   getRoomDetails() {
     fetch("/api/get-room" + "?code=" + this.roomCode)
       .then((response) => {
         if(!response.ok) {
-          this.leaveRoomCallBack();
+          this.leaveRoomCallBack;
           navigation.navigate('/');
         }
         return response.json();
@@ -50,7 +52,7 @@ class Room extends Component {
       headers: {"Content-Type":"application/json"},
     };
     fetch("/api/leave-room", requestOptions).then((_response) => {
-      this.leaveRoomCallBack();
+      this.leaveRoomCallBack;
       navigation.navigate('/')
     });
   }
@@ -70,7 +72,7 @@ class Room extends Component {
             votesToSkip={this.state.votesToSkip} 
             guestCanPause={this.state.guestCanPause} 
             roomCode={this.roomCode}
-            updateCallback={() => {}} 
+            updateCallback={this.getRoomDetails} 
           />
         </Grid>
         <Grid item xs={12} align="center">
@@ -105,6 +107,9 @@ class Room extends Component {
   }
 
   render() {
+    if (this.state.showSettings) {
+      return this.renderSettings();
+    }
     return (
       <Grid container spacing={1}>
         <Grid item xs={12} align="center">
