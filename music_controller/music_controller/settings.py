@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import environ
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,6 +29,13 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+#Environment
+BASE_DIR = Path(__file__).resolve().parent.parent
+env = environ.Env()
+environ.Env.read_env(env_file=str(BASE_DIR) + '/spotify/.env') 
+SPOTIFY_CLIENT_ID = env('CLIENT_ID')
+SPOTIFY_CLIENT_SECRET = env('CLIENT_SECRET')
+SPOTIFY_REDIRECT_URI = env('REDIRECT_URI')
 
 # Application definition
 
@@ -39,7 +48,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'api.apps.ApiConfig',
     'rest_framework',
-    'frontend.apps.FrontendConfig'
+    'frontend.apps.FrontendConfig',
+    'spotify.apps.SpotifyConfig'
 ]
 
 MIDDLEWARE = [
