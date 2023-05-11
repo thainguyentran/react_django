@@ -13,10 +13,10 @@ class AuthURL(APIView):
         scopes = 'user-read-playback-state user-modify-playback-state user-read-currently-playing'
 
         url = Request('GET', 'https://accounts.spotify.com/authorize', params={
-            'scope': scopes,
+            'client_id': SPOTIFY_CLIENT_ID,
             'response_type': 'code',
             'redirect_uri': SPOTIFY_REDIRECT_URI,
-            'client_id': SPOTIFY_CLIENT_ID
+            'scope': scopes,
         }).prepare().url
 
         return Response({'url': url}, status=status.HTTP_200_OK)
@@ -30,7 +30,7 @@ def spotify_callback(request, format=None):
         'grant_type': 'authorization_code',
         'code': code,
         'redirect_uri': SPOTIFY_REDIRECT_URI,
-        'client_id':SPOTIFY_CLIENT_ID,
+        'client_id': SPOTIFY_CLIENT_ID,
         'client_secret': SPOTIFY_CLIENT_SECRET
     }).json()
 
@@ -50,9 +50,9 @@ def spotify_callback(request, format=None):
 
 class IsAuthenticated(APIView):
     def get(self, request, format=None):
-        is_authenicated = is_spotify_authenticated(
+        is_authenticated = is_spotify_authenticated(
             self.request.session.session_key)
-        return Response({'status': is_authenicated}, status=status.HTTP_200_OK)
+        return Response({'status': is_authenticated}, status=status.HTTP_200_OK)
 
 
 class CurrentSong(APIView):
