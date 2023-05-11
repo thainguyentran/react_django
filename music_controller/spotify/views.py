@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from rest_framework.views import APIView
 from requests import Request, post
-from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.response import Response
 from music_controller.settings import SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, SPOTIFY_REDIRECT_URI
 from .util import *
 from api.models import Room
@@ -13,14 +13,14 @@ class AuthURL(APIView):
         scopes = 'user-read-playback-state user-modify-playback-state user-read-currently-playing'
 
         url = Request('GET', 'https://accounts.spotify.com/authorize', params={
-            'client_id': SPOTIFY_CLIENT_ID,
+            'scope': scopes,
             'response_type': 'code',
             'redirect_uri': SPOTIFY_REDIRECT_URI,
-            'scope': scopes,
+            'client_id': SPOTIFY_CLIENT_ID
         }).prepare().url
 
         return Response({'url': url}, status=status.HTTP_200_OK)
-    
+
 
 def spotify_callback(request, format=None):
     code = request.GET.get('code')
@@ -43,8 +43,9 @@ def spotify_callback(request, format=None):
     if not request.session.exists(request.session.session_key):
         request.session.create()
 
-    update_or_create_user_token(request.session.session_key, 
-                                access_token, token_type, expires_in, refresh_token)
+    update_or_create_user_tokens(
+        request.session.session_key, access_token, token_type, expires_in, refresh_token)
+
     return redirect('frontend:')
 
 
@@ -64,26 +65,26 @@ class CurrentSong(APIView):
         else:
             return Response({}, status=status.HTTP_404_NOT_FOUND)
         host = room.host
-        endpoint = "/player/currently-playing"
+        endpoint = "player/currently-playing"
         response = execute_spotify_api_request(host, endpoint)
-        
+
         if 'error' in response or 'item' not in response:
             return Response({}, status=status.HTTP_204_NO_CONTENT)
-        
+
         item = response.get('item')
         duration = item.get('duration_ms')
         progress = response.get('progress_ms')
-        album_cover = item.get('album').get('image')[0].get('url')
+        album_cover = item.get('album').get('images')[0].get('url')
         is_playing = response.get('is_playing')
         song_id = item.get('id')
 
         artist_string = ""
 
-        for i, artist in enumerate(item.get('artist')):
-            if i >0:
+        for i, artist in enumerate(item.get('artists')):
+            if i > 0:
                 artist_string += ", "
-                name = artist.get('name')
-                artist_string += name
+            name = artist.get('name')
+            artist_string += name
 
         song = {
             'title': item.get('name'),
@@ -95,4 +96,5 @@ class CurrentSong(APIView):
             'votes': 0,
             'id': song_id
         }
+
         return Response(song, status=status.HTTP_200_OK)
