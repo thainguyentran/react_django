@@ -65,12 +65,12 @@ class Room extends Component {
   }
 
   authenticateSpotify() {
-    fetch('/spotify/is-authenticated')
+    fetch("/spotify/is-authenticated")
     .then((response) => response.json())
     .then((data) => {
       this.setState({spotifyAuthenticated: data.status});
       if (!data.status) {
-        fetch('/spotify/get-auth-url')
+        fetch("/spotify/get-auth-url")
         .then((response) => response.json())
         .then((data) => {
           window.location.replace(data.url);
@@ -80,15 +80,17 @@ class Room extends Component {
   }
 
   getCurrentSong() {
-    fetch('/spotify/current-song')
-    .then((response) => {
-      if (!response.ok) {
-        return {};
-      } else {
-        return response.json();
-      }
-    })
-    .then((data) => this.setState({ song: data }));
+    fetch("/spotify/current-song")
+      .then((response) => {
+        if (!response.ok) {
+          return {};
+        } else {
+          return response.json();
+        }
+      })
+      .then((data) => {
+        this.setState({ song: data });
+      });
   }
 
   leaveButtonPressed() {
