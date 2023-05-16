@@ -4,7 +4,7 @@ import CreateRoomPage from "./CreateRoomPage";
 import Room from "./Room.js";
 import { Grid, Button, ButtonGroup, Typography } from '@mui/material';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate} from "react-router-dom";
-
+import Info from "./Info";
 export default class HomePage extends Component {
     constructor(props) {
         super(props);
@@ -38,6 +38,9 @@ export default class HomePage extends Component {
                         <Button color="primary" to='/join' component={Link}>
                             Joint a room
                         </Button>
+                        <Button color="info" to='/info' component={Link}>
+                            Info
+                        </Button>
                         <Button color="secondary" to='/create' component={Link}>
                             Create a room
                         </Button>
@@ -59,6 +62,7 @@ export default class HomePage extends Component {
             <Routes>
                 <Route exact path='/' element={ this.state.roomCode ? <Navigate to={ '/room/' + this.state.roomCode } /> : this.renderHomePage()} />
                 <Route path='/join' element={<RoomJoinPage />} />
+                <Route path='/info' element={<Info />} />
                 <Route path='/create' element={<CreateRoomPage />} />
                 <Route path='/room/:roomCode/*' element={<Room leaveRoomCallback={this.clearRoomCode} />} />
             </Routes>
